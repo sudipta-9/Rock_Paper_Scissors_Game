@@ -1,43 +1,48 @@
-# Function to create a payment receipt
-def create_payment_receipt():
-    # Get user input
-    customer_name = input("Enter customer name: ")
-    date = input("Enter date (e.g., September 7, 2023): ")
-    payment_method = input("Enter payment method: ")
-    
-    # Initialize an empty list for items
-    items = []
-    
-    # Ask for items and their prices until the user is done
-    while True:
-        item_name = input("Enter item name (or 'done' to finish): ")
-        if item_name.lower() == 'done':
-            break
-        item_price = float(input("Enter item price: $"))
-        items.append((item_name, item_price))
-    
-    # Calculate the total amount
-    total_amount = sum(item[1] for item in items)
-    
-    # Construct the receipt content
-    receipt = f"Payment Receipt\n\n"
-    receipt += f"Customer Name: {customer_name}\n"
-    receipt += f"Date: {date}\n\n"
-    
-    # Add itemized list
-    receipt += "Items:\n"
-    for item_name, item_price in items:
-        receipt += f"- {item_name}: ${item_price}\n"
-    receipt += f"Total Amount: ${total_amount}\n\n"
-    
-    receipt += f"Payment Method: {payment_method}\n"
-    
-    # Print the receipt to the console
-    print(receipt)
-    
-    # Save the receipt to a text file
-    with open("payment_receipt.txt", "w") as file:
-        file.write(receipt)
+import random
 
-# Create a payment receipt
-create_payment_receipt()
+def get_user_choice():
+    user_choice = input("Enter your choice (Rock, Paper, or Scissors): ").lower()
+    while user_choice not in ['rock', 'paper', 'scissors']:
+        user_choice = input("Invalid input. Please enter Rock, Paper, or Scissors: ").lower()
+    return user_choice
+
+def get_computer_choice():
+    choices = ['rock', 'paper', 'scissors']
+    return random.choice(choices)
+
+def determine_winner(user_choice, computer_choice):
+    if user_choice == computer_choice:
+        return "It's a tie!", 0
+    elif (
+        (user_choice == 'rock' and computer_choice == 'scissors') or
+        (user_choice == 'paper' and computer_choice == 'rock') or
+        (user_choice == 'scissors' and computer_choice == 'paper')
+    ):
+        return f"You win! {user_choice.capitalize()} beats {computer_choice}", 1
+    else:
+        return f"Computer wins! {computer_choice.capitalize()} beats {user_choice}", -1
+
+def play_game():
+    print("Welcome to Rock, Paper, Scissors!")
+    user_score = 0
+    computer_score = 0
+
+    while True:
+        user_choice = get_user_choice()
+        computer_choice = get_computer_choice()
+        print("You chose:", user_choice.capitalize())
+        print("Computer chose:", computer_choice.capitalize())
+
+        result, score = determine_winner(user_choice, computer_choice)
+        print(result)
+
+        user_score += score
+        print(f"Your Score: {user_score}, Computer Score: {computer_score}")
+
+        play_again = input("Do you want to play again? (yes/no): ").lower()
+        if play_again != 'yes':
+            print("Thanks for playing! Goodbye!")
+            break
+
+if __name__ == "__main__":
+    play_game()
